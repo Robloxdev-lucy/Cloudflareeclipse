@@ -104,19 +104,28 @@
             <div class="glass-overlay"></div>
             <div class="glass-specular"></div>
             <div class="glass-content vm-glass-content">
-                <div class="vm-status" id="status">No active session</div>
+    <div class="vm-viewport">
 
-                <div class="vm-controls">
-                    <button class="vm-btn" id="startBtn"><i class="fas fa-play"></i> Start Session</button>
-                    <button class="vm-btn" id="endBtn" disabled><i class="fas fa-stop"></i> End Session</button>
-                    <button class="vm-btn" id="fullscreenBtn" style="display: none;"><i class="fas fa-expand"></i> Fullscreen</button>
-                    <div class="vm-timer" id="timer" style="display: none;"><i class="fas fa-clock"></i> Time remaining: 15:00</div>
-                </div>
+        <div class="vm-sidepanel">
+            <div class="vm-status" id="status">No active session</div>
 
-                <div id="hyperbeam-container">
-                    <div id="containerMessage">Click "Start Session" to begin</div>
+            <div class="vm-controls">
+                <button class="vm-btn" id="startBtn"><i class="fas fa-play"></i> Start Session</button>
+                <button class="vm-btn" id="endBtn" disabled><i class="fas fa-stop"></i> End Session</button>
+                <button class="vm-btn" id="fullscreenBtn" style="display: none;"><i class="fas fa-expand"></i> Fullscreen</button>
+                <div class="vm-timer" id="timer" style="display: none;">
+                    <i class="fas fa-clock"></i> Time remaining: 15:00
                 </div>
             </div>
+        </div>
+
+        <div id="hyperbeam-container">
+            <div id="containerMessage">Click "Start Session" to begin</div>
+        </div>
+
+    </div>
+</div>
+
         </div>
     </main>
 <script src="js/vm.js" type="module"></script>
