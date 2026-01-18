@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Music - Crafted Gamz v14</title>
+<title>Music - Crafted Gamz</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/music.css">
 </head>
@@ -143,135 +144,6 @@
     </div>
   </div>
 </main>
-
-<script>
-const API_KEY = 'AIzaSyA8zywHf8YGSP77EN3-f9Pd0CQqvbRgaJU';
-const CSE_ID = 'e6571a5239fba463e';
-
-const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
-const resultsDiv = document.getElementById('results');
-const resultsContainer = document.getElementById('resultsContainer');
-const errorMsg = document.getElementById('errorMsg');
-const player = document.getElementById('player');
-const visualizer = document.getElementById('visualizer');
-const canvasCtx = visualizer.getContext('2d');
-const visualizerContainer = document.getElementById('visualizerContainer');
-const embedContainer = document.getElementById('embedContainer');
-const placeholderContainer = document.getElementById('placeholderContainer');
-
-let barHeights = new Array(64).fill(0.2);
-let animationId;
-
-function drawVisualizer() {
-  animationId = requestAnimationFrame(drawVisualizer);
-  
-  const WIDTH = visualizer.width;
-  const HEIGHT = visualizer.height;
-  const barCount = 64;
-  const barWidth = WIDTH / barCount;
-  
-  canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-  
-  for (let i = 0; i < barCount; i++) {
-    const targetHeight = Math.random() * 0.9 + 0.05;
-    barHeights[i] += (targetHeight - barHeights[i]) * 0.05;
-    
-    const barHeight = HEIGHT * barHeights[i];
-    const x = i * barWidth;
-    const y = HEIGHT - barHeight;
-    
-    canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    canvasCtx.fillRect(x, y, barWidth - 2, barHeight);
-  }
-}
-
-function startVisualizer() {
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-  }
-  drawVisualizer();
-}
-
-function stopVisualizer() {
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-  }
-  canvasCtx.clearRect(0, 0, visualizer.width, visualizer.height);
-}
-
-searchInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    searchBtn.click();
-  }
-});
-
-searchBtn.addEventListener('click', async () => {
-  const query = searchInput.value.trim();
-  
-  errorMsg.innerHTML = '';
-  
-  if (!query) {
-    errorMsg.innerHTML = '<div class="error">Please enter a search query</div>';
-    return;
-  }
-  
-  searchBtn.disabled = true;
-  searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-  resultsDiv.innerHTML = '<div class="loading">🔍 Searching SoundCloud...</div>';
-  resultsContainer.style.display = 'block';
-  
-  try {
-    const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CSE_ID}&q=${encodeURIComponent(query)}`;
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || `HTTP ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    if (!data.items || data.items.length === 0) {
-      resultsDiv.innerHTML = '<div class="no-results">No tracks found. Try different keywords.</div>';
-      return;
-    }
-    
-    resultsDiv.innerHTML = data.items.map(item => {
-      const isSoundCloudTrack = item.link && item.link.includes('soundcloud.com/') && !item.link.includes('/sets/');
-      
-      return `
-        <div class="track-card" onclick='${isSoundCloudTrack ? `playTrack("${item.link.replace(/'/g, "\\'")}")` : `window.open("${item.link}", "_blank")`}'>
-          <div class="track-title">${item.title || 'Untitled'}</div>
-          <div class="track-snippet">${item.snippet || ''}</div>
-          <div class="track-url">${item.link}</div>
-        </div>
-      `;
-    }).join('');
-    
-  } catch (error) {
-    errorMsg.innerHTML = `<div class="error"><strong>Error:</strong> ${error.message}</div>`;
-    resultsDiv.innerHTML = '';
-  } finally {
-    searchBtn.disabled = false;
-    searchBtn.innerHTML = '<i class="fas fa-search"></i>';
-  }
-});
-
-function playTrack(url) {
-  player.src = '';
-  stopVisualizer();
-  
-  setTimeout(() => {
-    player.src = `searcher.html?q=https%3A%2F%2Fw.soundcloud.com%2Fplayer%2F%3Furl%3D${encodeURIComponent(encodeURIComponent(url))}%26color%3D%2523ff6b6b%26auto_play%3Dtrue%26hide_related%3Dtrue%26show_comments%3Dfalse%26show_user%3Dtrue%26show_reposts%3Dfalse%26show_teaser%3Dfalse%26visual%3Dfalse&backend=ultraviolet&wisp=wss%3A%2F%2Fwisp.rhw.one%2F`;
-    startVisualizer();
-    
-    placeholderContainer.style.display = 'none';
-    visualizerContainer.style.display = 'block';
-    embedContainer.style.display = 'block';
-  }, 100);
-}
-</script>
+<script src="js/music.js"></script>
 </body>
 </html>

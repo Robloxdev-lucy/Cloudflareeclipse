@@ -342,47 +342,89 @@ button:disabled {
   border-radius: 3px;
 }
 
+/* Enhanced track card styles */
 .track-card {
-  padding: 14px;
-  margin-bottom: 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.track-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .track-card:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.track-card:hover::before {
+  opacity: 1;
+}
+
+.track-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .track-title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 4px;
-  color: white;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.track-title::before {
+  content: '\f001';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
 .track-snippet {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 4px;
 }
 
 .track-url {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: monospace;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.track-card:hover .track-url {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .player-section {
