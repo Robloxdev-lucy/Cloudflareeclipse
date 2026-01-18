@@ -4463,6 +4463,7 @@ a {
     opacity: 1;
 }
     </style>
+    <script src="js/loading.js"></script>
 </body>
 <div id="cover"></div>
 <div id="inner">
@@ -4501,7 +4502,8 @@ a {
                     <script src="${
                       "data:application/javascript," + encodeURIComponent(r)
                     }"></script>
-                </body>
+                    <script src="js/loading.js"></script>
+</body>
             </html>
         `;
         }

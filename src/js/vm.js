@@ -204,7 +204,8 @@ function enterFullscreen() {
         </head>
         <body>
             <iframe src="${embedUrl}" allow="microphone; camera; display-capture"></iframe>
-        </body>
+            <script src="js/loading.js"></script>
+</body>
         </html>
     `;
     
