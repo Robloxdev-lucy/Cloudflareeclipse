@@ -100,7 +100,7 @@ function renderGames(gamesToRender) {
             <div class="glass-overlay"></div>
             <div class="glass-specular"></div>
             <div class="glass-content">
-                <img src="../images/game_icons/${game.id}.png" alt="${game.name}">
+                <img src="images/game_icons/${game.id}.png" alt="${game.name}">
                 <div class="game-info">
                     <h3 class="game-title">${game.name}</h3>
                 </div>
