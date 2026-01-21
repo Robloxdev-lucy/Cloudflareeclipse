@@ -1,5 +1,5 @@
 const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_KEY_URL = 'https://groq.craftedgamz.workers.dev';
+const GROQ_KEY_URL = 'https://ai.cdn.cgamz.online';
 let API_KEY = null;
 
 let currentModel = 'llama-3.3-70b-versatile';
