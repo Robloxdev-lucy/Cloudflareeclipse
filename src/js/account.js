@@ -6,6 +6,8 @@ class AccountManager {
     this.user = null;
     this.syncInterval = null;
     this.isGuest = false;
+    this.lastSyncData = null;
+    this.syncCount = 0;
     
     this.initFirebase();
   }
@@ -47,6 +49,15 @@ class AccountManager {
       
       this.auth = firebase.auth();
       this.db = firebase.firestore();
+
+      this.auth.getRedirectResult().then(async (result) => {
+        if (result.user) {
+          console.log('Redirect sign-in successful');
+          await this.handleOAuthSignIn(result);
+        }
+      }).catch((error) => {
+        console.error('Redirect error:', error);
+      });
 
       this.auth.onAuthStateChanged(async (user) => {
         if (user) {
@@ -233,6 +244,72 @@ class AccountManager {
           transform: none;
         }
         
+        .auth-btn-oauth {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          font-weight: 500;
+        }
+        
+        .auth-btn-google {
+          background: rgba(255, 255, 255, 0.9);
+          color: #202124;
+          border-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .auth-btn-google:hover {
+          background: rgba(255, 255, 255, 1);
+          box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+          transform: translateY(-2px);
+        }
+        
+        .auth-btn-github {
+          background: rgba(36, 41, 47, 0.9);
+          color: white;
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-btn-github:hover {
+          background: rgba(36, 41, 47, 1);
+          box-shadow: 0 0 25px rgba(100, 100, 100, 0.4);
+          transform: translateY(-2px);
+        }
+        
+        .auth-btn-oauth:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        .oauth-icon {
+          width: 20px;
+          height: 20px;
+        }
+        
+        .auth-divider {
+          display: flex;
+          align-items: center;
+          margin: 25px 0;
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 14px;
+        }
+        
+        .auth-divider::before,
+        .auth-divider::after {
+          content: '';
+          flex: 1;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-divider::before {
+          margin-right: 15px;
+        }
+        
+        .auth-divider::after {
+          margin-left: 15px;
+        }
+        
         .auth-btn-secondary {
           background: rgba(40, 40, 40, 0.2);
           color: rgba(255, 255, 255, 0.9);
@@ -274,6 +351,26 @@ class AccountManager {
         <div class="glass-content">
           <h2>Welcome!</h2>
           <p>Sign in to sync your data across devices</p>
+          
+          <button class="auth-btn auth-btn-oauth auth-btn-google" id="auth-google">
+            <svg class="oauth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+          
+          <button class="auth-btn auth-btn-oauth auth-btn-github" id="auth-github">
+            <svg class="oauth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            Continue with GitHub
+          </button>
+          
+          <div class="auth-divider">or</div>
+          
           <input type="text" id="auth-name" class="auth-input" placeholder="Your name" style="display:none;">
           <input type="email" id="auth-email" class="auth-input" placeholder="Email">
           <input type="password" id="auth-password" class="auth-input" placeholder="Password">
@@ -292,9 +389,64 @@ class AccountManager {
     const emailInput = overlay.querySelector('#auth-email');
     const passwordInput = overlay.querySelector('#auth-password');
     const submitBtn = overlay.querySelector('#auth-submit');
+    const googleBtn = overlay.querySelector('#auth-google');
+    const githubBtn = overlay.querySelector('#auth-github');
     const guestBtn = overlay.querySelector('#auth-guest');
     const toggleBtn = overlay.querySelector('#auth-toggle');
     const errorDiv = overlay.querySelector('#auth-error');
+
+    const createOAuthHandler = (providerType, button) => {
+      return async () => {
+        errorDiv.textContent = '';
+        button.disabled = true;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<span>Signing in...</span>';
+
+        try {
+          console.log(`Initiating ${providerType} Sign-In...`);
+          let provider;
+          
+          if (providerType === 'Google') {
+            provider = new firebase.auth.GoogleAuthProvider();
+          } else if (providerType === 'GitHub') {
+            provider = new firebase.auth.GithubAuthProvider();
+          }
+          
+          try {
+            const result = await this.auth.signInWithPopup(provider);
+            await this.handleOAuthSignIn(result);
+          } catch (popupError) {
+            if (popupError.code === 'auth/unauthorized-domain') {
+              console.log('Unauthorized domain, using redirect instead...');
+              await this.auth.signInWithRedirect(provider);
+              return;
+            }
+            throw popupError;
+          }
+        } catch (error) {
+          console.error(`${providerType} Sign-In error:`, error);
+          button.disabled = false;
+          button.innerHTML = originalText;
+
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorDiv.textContent = 'Sign-in cancelled';
+          } else if (error.code === 'auth/popup-blocked') {
+            errorDiv.textContent = 'Pop-up blocked. Please allow pop-ups for this site.';
+          } else if (error.code === 'auth/cancelled-popup-request') {
+            errorDiv.textContent = '';
+          } else if (error.code === 'auth/unauthorized-domain') {
+            errorDiv.textContent = 'This domain is not authorized. Please add it to Firebase Console.';
+          } else if (error.code === 'auth/account-exists-with-different-credential') {
+            errorDiv.textContent = 'An account already exists with this email using a different sign-in method.';
+          } else {
+            errorDiv.textContent = error.message;
+          }
+        }
+      };
+    };
+
+    googleBtn.addEventListener('click', createOAuthHandler('Google', googleBtn));
+    githubBtn.addEventListener('click', createOAuthHandler('GitHub', githubBtn));
 
     toggleBtn.addEventListener('click', () => {
       isSignUp = !isSignUp;
@@ -390,6 +542,22 @@ class AccountManager {
     if (overlay) overlay.remove();
   }
 
+  async handleOAuthSignIn(result) {
+    console.log('OAuth Sign-In successful');
+    
+    const userDoc = await this.db.collection('users').doc(result.user.uid).get();
+    if (!userDoc.exists) {
+      console.log('Creating new user profile for OAuth user');
+      await this.db.collection('users').doc(result.user.uid).set({
+        name: result.user.displayName || result.user.email.split('@')[0] || 'User',
+        email: result.user.email,
+        photoURL: result.user.photoURL || null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        storage: {}
+      });
+    }
+  }
+
   async loadUserData() {
     if (!this.user) return;
 
@@ -438,14 +606,20 @@ class AccountManager {
         }
       }
 
-      console.log(`Syncing ${Object.keys(storage).length} localStorage items to server`);
+      const storageString = JSON.stringify(storage);
+      const hasChanged = this.lastSyncData !== storageString;
+      
+      if (hasChanged) {
+        this.syncCount++;
+        console.log(`%c[Sync #${this.syncCount}] Data changed - syncing ${Object.keys(storage).length} items`, 'color: #4CAF50; font-weight: bold');
+        this.lastSyncData = storageString;
+      }
 
       await this.db.collection('users').doc(this.user.uid).update({
         storage: storage,
         lastSync: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      console.log('Data synced to server:', storage);
     } catch (error) {
       console.error('Error syncing to server:', error);
     }
@@ -456,16 +630,18 @@ class AccountManager {
 
     this.syncInterval = setInterval(() => {
       this.syncToServer();
-    }, 5000);
+    }, 500);
 
-    console.log('Auto-sync started');
+    console.log('%c[Auto-Sync] Started - syncing every 0.5 seconds (only logs on data change)', 'color: #2196F3; font-weight: bold');
   }
 
   stopAutoSync() {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      console.log('Auto-sync stopped');
+      this.syncCount = 0;
+      this.lastSyncData = null;
+      console.log('%c[Auto-Sync] Stopped', 'color: #FF9800; font-weight: bold');
     }
   }
 
