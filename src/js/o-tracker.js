@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    const FIREBASE_CONFIG_URL = 'https://firebase.craftedgamz.workers.dev';
+    const FIREBASE_CONFIG_URL = 'https://firebase.cdn.cgamz.online';
 
     let rtdb;
     let onlineRef;

@@ -1,6 +1,6 @@
 class AccountManager {
   constructor() {
-    this.FIREBASE_CONFIG_URL = 'https://firebase.craftedgamz.workers.dev';
+    this.FIREBASE_CONFIG_URL = 'https://firebase.cdn.cgamz.online';
     this.db = null;
     this.auth = null;
     this.user = null;

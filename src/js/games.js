@@ -1,4 +1,4 @@
-const FIREBASE_CONFIG_URL = 'https://firebase.craftedgamz.workers.dev';
+const FIREBASE_CONFIG_URL = 'https://firebase.cdn.cgamz.online';
 
 const games = [
     { id: 'soccer-random', name: 'Soccer Random', encoded: 'Vrffhu Udqgrp' },

@@ -1,4 +1,4 @@
-const FIREBASE_CONFIG_URL = 'https://firebase.craftedgamz.workers.dev';
+const FIREBASE_CONFIG_URL = 'https://firebase.cdn.cgamz.online';
 const ANIMATION_DURATION = 1200;
 const STAGGER_DELAY = 150;
 
